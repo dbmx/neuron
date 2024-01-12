@@ -1,0 +1,268 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <!-- Admin Controls -->
+  {% if current_user.is_authenticated and current_user.is_admin %}
+  <a href="{{ url_for('news.add_news') }}" class="btn btn-success mb-3"
+    >Add News</a
+  >
+  <a href="{{ url_for('pages.add_page') }}" class="btn btn-warning mb-3"
+    >Add Pages</a
+  >
+  {% endif %}
+
+  <!-- News Items Loop -->
+  {% for news_item in news_items %}
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card">
+        {% if news_item.featured_image %}
+        <img
+          src="{{ url_for('static', filename='images/' + news_item.featured_image) }}"
+          alt="{{ news_item.title }}"
+          class="card-img-top"
+          style="max-height: 250px; object-fit: cover"
+        />
+        {% endif %}
+        <div class="card-body">
+          <h2 class="card-title">
+            <a
+              href="{{ url_for('news.news_detail', news_slug=news_item.slug) }}"
+              >{{ news_item.title }}</a
+            >
+          </h2>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <small
+                ><i class="bi bi-calendar" style="font-size: 1.2rem"></i>
+                Published: {{ moment(news_item.created_at).fromNow(refresh=True)
+                }}</small
+              ><br />
+              {% set read_time = calculate_read_time(news_item.content) %}
+              <small
+                ><i
+                  class="bi bi-clock {{ 'color-red' if read_time <= 2 else 'color-orange' if read_time <= 4 else 'color-yellow' if read_time <= 6 else 'color-lightgreen' if read_time <= 8 else 'color-green' }}"
+                  style="font-size: 1.2rem"
+                ></i>
+                {{ read_time }} min read time</small
+              >
+            </div>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+            <div>
+              <a
+                href="{{ url_for('news.edit_news', news_slug=news_item.slug) }}"
+                class="btn btn-sm btn-secondary"
+                >Edit</a
+              >
+              <form
+                action="{{ url_for('news.delete_news', news_id=news_item.id) }}"
+                method="post"
+                class="d-inline"
+              >
+                <button type="submit" class="btn btn-sm btn-danger">
+                  Delete
+                </button>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+          <hr />
+          <div
+            id="tinymce_{{ news_item.id }}"
+            style="max-width: 100%; overflow: hidden"
+          >
+            {{ news_item.content[:760] | safe | striptags | escape }}
+          </div>
+          <div class="text-end">
+            <div id="viewCounter_{{ news_item.id }}">
+              Views:
+              <span
+                class="numberOfViews"
+                data-views="{{ news_item.click_count }}"
+                >0</span
+              ><span class="tooltip">View info</span>
+            </div>
+            <div id="commentCounter_{{ news_item.id }}">
+              Comments:
+              <span class="numberOfComments"
+                >{{ news_item.comments.count() }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <button
+          class="btn btn-dark"
+          type="button"
+          onclick="toggleComments('comments_{{ news_item.id }}')"
+        >
+          Comments
+        </button>
+        {% include '_addcomment.html' %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Pagination -->
+  <div class="text-center mb-3">
+    {% if news_items.has_prev %}<a
+      href="{{ url_for('main.home', page=news_items.prev_num) }}"
+      class="btn btn-primary"
+      >Previous</a
+    >{% endif %} {% if news_items.has_next %}<a
+      href="{{ url_for('main.home', page=news_items.next_num) }}"
+      class="btn btn-primary"
+      >Next</a
+    >{% endif %}
+    <div><span>Page {{ news_items.page }} of {{ news_items.pages }}</span></div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  // JavaScript
+  document.addEventListener("DOMContentLoaded", function () {
+    const commentsList = document.querySelector(".comment-list");
+    const comments = Array.from(commentsList.querySelectorAll(".comment"));
+
+    // Sakrijemo sve komentare
+    comments.forEach((comment) => {
+      comment.style.display = "none";
+    });
+
+    // Prikazujemo prvih 4 komentara (ako ih ima)
+    for (let i = 0; i < 4 && i < comments.length; i++) {
+      comments[i].style.display = "block";
+    }
+
+    // Prikazi "Show more" dugme samo ako ima više od 4 komentara
+    if (comments.length > 4) {
+      const showMoreButton = document.createElement("button");
+      showMoreButton.className = "btn btn-dark show-more-comments";
+      showMoreButton.type = "button";
+      showMoreButton.textContent = "Show more";
+      commentsList.appendChild(showMoreButton);
+
+      showMoreButton.addEventListener("click", function () {
+        for (let i = 4; i < comments.length; i++) {
+          comments[i].style.display = "block";
+        }
+        // Sakrijemo "Show more" dugme nakon prikazivanja svih komentara
+        this.style.display = "none";
+      });
+    }
+  });
+
+  // View Counter Style Update
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".numberOfViews").forEach(function (element) {
+      var numberOfViews = parseInt(element.getAttribute("data-views"));
+      element.textContent = numberOfViews;
+
+      // Dodajte ovu liniju za postavljanje klase prema nivou toplote
+      element.classList.add(getHeatLevelClass(numberOfViews));
+    });
+  });
+
+  // Funkcija za određivanje klase prema nivou toplote
+  function getHeatLevelClass(views) {
+    if (views < 100) {
+      return "hot-low";
+    } else if (views < 200) {
+      return "hot-medium";
+    } else if (views < 400) {
+      return "hot-preheat";
+    } else if (views < 500) {
+      return "hot-heating";
+    } else if (views < 1000) {
+      return "hot-fire";
+    } else {
+      return "hot-high";
+    }
+  }
+
+  function updateViewStyle(views, element) {
+    // Style logic based on views count
+  }
+
+  // Toggle Comments Section
+  function toggleComments(commentsId) {
+    var commentsSection = document.getElementById(commentsId);
+    commentsSection.style.display =
+      commentsSection.style.display === "none" ? "block" : "none";
+  }
+
+  // AJAX za Dodavanje Komentara
+  document.querySelectorAll(".comment-form").forEach((form) => {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var formData = new FormData(this);
+
+      fetch(this.action, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            // Create a new comment element
+            var newComment = document.createElement("div");
+            newComment.className = "comment";
+            newComment.innerHTML = data.comment_html;
+
+            // Append the new comment to the comments list
+            var commentsList =
+              this.closest(".comments-section").querySelector(".comment-list");
+            commentsList.appendChild(newComment);
+
+            // Reset the form
+            this.reset();
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          alert("Error adding comment.");
+        });
+    });
+  });
+
+  // Handler za brisanje komentara
+  function deleteCommentHandler(event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    console.log("Brisanje komentara funkcija je pozvana"); // Dodajte ovu liniju
+
+    fetch(this.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          var commentId = this.closest(".comment").id;
+          document.getElementById(commentId).remove();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        alert("Error deleting comment.");
+      });
+  }
+
+  // AJAX za Dodavanje Komentara
+  // ...
+
+  // Nakon uspešnog dodavanja novog komentara...
+  // ...
+
+  // refreshDeleteCommentForms(); // Pozvati ovu funkciju da osvežite event listener-e za brisanje komentara
+</script>
+
+{% endblock %}

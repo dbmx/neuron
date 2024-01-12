@@ -1,0 +1,62 @@
+<!-- _addcomment.html -->
+<div
+  id="comments_{{ news_item.id }}"
+  class="comments-section"
+  style="display: none"
+>
+  <!-- Prikazani komentari -->
+  <div class="comment-list">
+    {% for comment in news_item.comments %}
+    <div class="comment">
+      <div class="row">
+        <div class="col">
+          <h6>
+            <strong class="text-success">{{ comment.author.username }}</strong>
+            <small class="text-muted ms-2"
+              >{{ moment(comment.created_at).fromNow() }}</small
+            >
+          </h6>
+          <p>{{ comment.content }}</p>
+        </div>
+        <div class="col-auto">
+          {% if current_user.is_authenticated and (current_user.id ==
+          comment.author.id or current_user.is_admin) %}
+          <form
+            action="{{ url_for('news.delete_comment', comment_id=comment.id) }}"
+            method="post"
+            class="delete-comment-form"
+          >
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Show more button -->
+  <!----  <div class="text-center"> -->
+  <!--  <button class="btn btn-dark show-more-comments">more</button> -->
+  <!-- </div> -->
+
+  <!-- Comment Box -->
+  {% if current_user.is_authenticated %}
+  <div class="card mt-4">
+    <div class="card-body">
+      <form
+        method="POST"
+        action="{{ url_for('news.add_comment', news_id=news_item.id) }}"
+        class="comment-form"
+      >
+        {{ forms[news_item.id].hidden_tag() }}
+        <div class="mb-3">
+          {{ forms[news_item.id].content.label(class="form-label text-white") }}
+          {{ forms[news_item.id].content(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div>

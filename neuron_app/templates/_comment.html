@@ -1,0 +1,29 @@
+<div class="card mb-3 comment" id="comment_{{ comment.id }}">
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <h6 class="card-title">
+          <strong>{{ comment.author.username }}</strong>
+          <small class="text-muted ms-2"
+            >{{ moment(comment.created_at).fromNow() }}</small
+          >
+        </h6>
+        <p class="card-text">{{ comment.content }}</p>
+      </div>
+
+      <!-- Dugme za brisanje (vidljivo samo autoru komentara ili adminu) -->
+      <div class="col-auto">
+        {% if current_user.is_authenticated and (current_user.id ==
+        comment.author.id or current_user.is_admin) %}
+        <form
+          action="{{ url_for('news.delete_comment', comment_id=comment.id) }}"
+          method="post"
+          class="delete-comment-form"
+        >
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

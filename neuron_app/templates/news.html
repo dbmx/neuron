@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <div id="newsAccordion">
+    {% if grouped_news %} {% for year_month, news_list in grouped_news.items()
+    %}
+    <div class="card">
+      <div class="card-header" id="heading{{ loop.index }}">
+        <h2 class="mb-0">
+          <button
+            class="btn btn-link"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapse{{ loop.index }}"
+            aria-expanded="true"
+            aria-controls="collapse{{ loop.index }}"
+          >
+            {{ year_month }}
+          </button>
+        </h2>
+      </div>
+      <div
+        id="collapse{{ loop.index }}"
+        class="collapse show"
+        aria-labelledby="heading{{ loop.index }}"
+        data-parent="#newsAccordion"
+      >
+        <div class="card-body">
+          <ul class="list-unstyled">
+            {% for news_item in news_list %}
+            <li class="news-item">
+              <a
+                href="{{ url_for('news.news_detail', news_slug=news_item.slug) }}"
+                >{{ news_item.title }}</a
+              >
+              <div>
+                <span class="reading-time"
+                  >{{ news_item.content | calculate_read_time }} min read
+                  time</span
+                >
+                <span class="news-date"
+                  >{{ moment(news_item.created_at).fromNow() }}</span
+                >
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="alert alert-info">Trenutno nema dostupnih novosti.</div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .news-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .news-item div {
+    text-align: right;
+  }
+  .reading-time,
+  .news-date {
+    font-size: 0.9em;
+    color: #888;
+  }
+  .reading-time {
+    margin-right: 22px;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,209 @@
+/* Base Styles - Sets default font family for the body */
+body {
+  font-family: source sans pro, -apple-system, BlinkMacSystemFont, segoe ui,
+    Roboto, helvetica neue, Arial, sans-serif, apple color emoji, segoe ui emoji,
+    segoe ui symbol;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Navigation Bar - Styles for the navigation bar */
+.navbar {
+  border-bottom: 1px solid #4b4b4b;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+  font-size: 1em;
+  font-weight: 400;
+}
+
+/* Navigation Links - Styles for navigation links */
+.nav-link {
+  font-weight: 400;
+}
+
+/* Typography - Styles for different heading levels and text */
+.display-4,
+.card-title {
+  font-size: 35px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: 0em;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+/* Color Classes - Utility classes for text colors */
+.color-red {
+  color: red;
+}
+.color-orange {
+  color: orange;
+}
+.color-yellow {
+  color: yellow;
+}
+.color-lightgreen {
+  color: lightgreen;
+}
+.color-green {
+  color: green;
+}
+
+/* Buttons - Styles for buttons */
+.btn {
+  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Forms - Styles for form controls */
+.form-control {
+  border-radius: 18px;
+}
+
+/* Cards - Styles for card components */
+.card {
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+  position: relative; /* For positioning elements inside card */
+}
+
+.card-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* Footer - Styles for the footer */
+.footer {
+  background-color: #f8f8f7;
+  color: #333;
+}
+
+/* Charts in News Cards - Positioning for charts */
+.news-chart {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 160px;
+  height: 80px;
+}
+
+/* View Counter - Styles for view counter */
+#viewCounter {
+  font-size: 24px;
+  font-weight: bold;
+  transition: color 0.5s ease;
+}
+
+/* Heat Level Classes - Utility classes for different heat levels */
+.hot-low {
+  color: rgb(56, 56, 56);
+}
+.hot-medium {
+  color: rgb(66, 102, 62);
+}
+.hot-preheat {
+  color: rgb(212, 214, 135);
+}
+.hot-heating {
+  color: rgb(215, 169, 143);
+}
+.hot-fire {
+  color: rgb(207, 98, 98);
+}
+.hot-high {
+  color: rgb(117, 0, 0);
+}
+
+/* Tooltip - Styles for tooltips */
+.tooltip {
+  visibility: hidden;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#viewCounter:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Comments Section - Styles for the comments section */
+.comments-section {
+}
+
+.comment {
+  margin-bottom: 20px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author {
+  font-weight: bold;
+}
+
+.timestamp {
+  font-size: 0.8em;
+  color: gray;
+}
+
+.comment-content {
+}
+
+.btn-delete,
+.btn-post-comment {
+}
+
+/* Responsive Styles - Adjustments for smaller screens */
+@media (max-width: 600px) {
+}
+
+.comments-section {
+  padding: 30px;
+  background: #44a1ff14;
+}
+
+/* Stil za komentare u stilu "reddit" */
+.comment {
+  border: none; /* Uklanja sve border linije */
+  margin-bottom: 10px; /* Dodaje razmak između komentara */
+}
+
+.comment-content {
+  padding: 10px; /* Dodaje unutarnji razmak za sadržaj komentara */
+}
+
+.comment-content h6 {
+  margin-bottom: 5px; /* Dodaje razmak ispod autora i vremena */
+}
+
+.comment-content p {
+  margin-bottom: 0; /* Uklanja dodatni razmak ispod teksta komentara */
+}
+
+/* Stil za dugme za brisanje komentara */
+.delete-comment-form {
+  margin-top: 10px; /* Dodaje razmak iznad dugmeta za brisanje */
+}

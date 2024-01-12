@@ -1,0 +1,17 @@
+{% for news_item in news_items %}
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="card-title">
+      <a href="{{ url_for('news.show_single_news', news_title=news_item.id) }}"
+        >{{ news_item.title }}</a
+      >
+    </h2>
+    <p class="card-text">{{ news_item.content | safe }}</p>
+    <!-- Dodatni detalji... -->
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+  Trenutno nema dostupnih novosti.
+</div>
+{% endfor %}

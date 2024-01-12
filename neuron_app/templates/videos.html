@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <!-- Dodavanje sekcije za YouTube videozapise -->
+  <div class="mt-5">
+    <h2 class="text-center">Najnoviji Videozapisi</h2>
+    <div class="row">
+      {% for video in videos %}
+      <div class="col-md-4 mb-4">
+        <div class="video-container">
+          <h3>{{ video.title }}</h3>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/{{ video.video_id }}"
+            frameborder="0"
+            allowfullscreen
+          >
+          </iframe>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- Kraj sekcije za videozapise -->
+</div>
+{% endblock %}

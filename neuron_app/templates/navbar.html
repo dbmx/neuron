@@ -1,0 +1,186 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('main.home') }}">S.DRAGIC</a>
+    <div class="d-flex">
+      <!-- Dugme za prebacivanje tema pored hamburger menija -->
+      <button
+        class="btn btn-link nav-link d-lg-none"
+        type="button"
+        id="themeToggle"
+      >
+        <i class="bi bi-sun-fill" id="theme-icon"></i>
+      </button>
+      <!-- Hamburger meni dugme -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('news.show_news') }}">News</a>
+        </li>
+        <li>{% include 'nav_links.html' %}</li>
+        <li>{% include 'dyn_nav_links.html' %}</li>
+        <!-- Dodatni linkovi ako su potrebni -->
+      </ul>
+
+      <ul class="navbar-nav">
+        <!-- Prebacivanje teme vidljivo samo na velikim ekranima -->
+        <li class="nav-item d-none d-lg-block">
+          <button
+            aria-expanded="false"
+            class="btn btn-link nav-link py-2 px-0 px-lg-3"
+            type="button"
+            id="themeToggleDesktop"
+          >
+            <i class="bi bi-sun-fill" id="theme-icon-desktop"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Profil Dropdown -->
+      {% if current_user.is_authenticated %}
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ current_user.username | upper }}
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="navbarDropdown"
+          >
+            <li>
+              <h6 class="dropdown-header">Personal Settings</h6>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Settings</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <h6 class="dropdown-header text-primary-emphasis">
+                Membership <i class="bi bi-patch-check-fill text-primary"></i>
+              </h6>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Messages</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Calendar</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Sessions</a>
+            </li>
+            {% if current_user.is_admin %}
+            <!-- Ovo će biti prikazano samo administratorima -->
+            <li><hr class="dropdown-divider" /></li>
+            <li><h6 class="dropdown-header">Administration</h6></li>
+            <li>
+              <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"
+                >Settings</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item text-success-emphasis"
+                href="{{ url_for('news.add_news') }}"
+                >News</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item text-warning-emphasis"
+                href="{{ url_for('pages.add_page') }}"
+                >Pages</a
+              >
+            </li>
+            <!-- Kraj administrator sekcije -->
+            {% endif %}
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
+                >Logout</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<script>
+  function toggleThemeAndIcon(themeIconId) {
+    const themeIcon = document.getElementById(themeIconId);
+    const currentTheme =
+      document.documentElement.getAttribute("data-bs-theme") === "dark"
+        ? "light"
+        : "dark";
+    document.documentElement.setAttribute("data-bs-theme", currentTheme);
+    sessionStorage.setItem("preferredTheme", currentTheme);
+
+    if (currentTheme === "light") {
+      themeIcon.className = "bi bi-moon-fill"; // Mesec za svetlu temu
+    } else {
+      themeIcon.className = "bi bi-sun-fill"; // Sunce za tamnu temu
+    }
+  }
+
+  document
+    .getElementById("themeToggle")
+    .addEventListener("click", () => toggleThemeAndIcon("theme-icon"));
+
+  document
+    .getElementById("themeToggleDesktop")
+    .addEventListener("click", () => toggleThemeAndIcon("theme-icon-desktop"));
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = sessionStorage.getItem("preferredTheme") || "light";
+    document.documentElement.setAttribute("data-bs-theme", savedTheme);
+
+    const updateIcons = () => {
+      const themeIconMobile = document.getElementById("theme-icon");
+      const themeIconDesktop = document.getElementById("theme-icon-desktop");
+      if (savedTheme === "light") {
+        themeIconMobile.className = "bi bi-moon-fill";
+        themeIconDesktop.className = "bi bi-moon-fill";
+      } else {
+        themeIconMobile.className = "bi bi-sun-fill";
+        themeIconDesktop.className = "bi bi-sun-fill";
+      }
+    };
+
+    updateIcons();
+  });
+</script>

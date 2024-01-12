@@ -1,0 +1,30 @@
+<!-- About the Trainer -->
+<li class="nav-item dropdown">
+  <a
+    class="nav-link dropdown-toggle"
+    href="#"
+    id="aboutDropdown"
+    role="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    >Discover</a
+  >
+  <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+    <!-- Dynamically Added Pages -->
+    {% set current_category = None %} {% for page in pages %} {% if
+    page.is_header %} {% if current_category %} {% endif %}
+    <li>
+      <h5 class="dropdown-item disabled">{{ page.title }}</h5>
+    </li>
+    {% set current_category = page.title %} {% else %}
+    <li>
+      <a
+        class="dropdown-item"
+        href="{{ url_for('pages.show_page', page_name=page.title) }}"
+        >{{ page.title }}</a
+      >
+    </li>
+    {% endif %} {% endfor %}
+    <!-- ...rest of your static items... -->
+  </ul>
+</li>
