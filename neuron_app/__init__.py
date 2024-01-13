@@ -18,7 +18,7 @@ def create_app():
     app = Flask(__name__)
 
     # Konfiguracija aplikacije
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///NEURON.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///neuron.db'
     app.config['SECRET_KEY'] = 'your-secret-key'
     app.config['UPLOADED_IMAGES_DEST'] = 'static/images'  # putanja za čuvanje slika
     configure_uploads(app, uploaded_images)
