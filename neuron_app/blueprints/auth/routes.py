@@ -22,7 +22,7 @@ def register():
         db.session.commit()
         flash('Your account has been created!', 'success')
         return redirect(url_for('auth.login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('/auth/register.html', title='Register', form=form)
 
 
 
@@ -40,7 +40,7 @@ def login():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
 
-    return render_template('login.html', title='Login', form=form)
+    return render_template('/auth/login.html', title='Login', form=form)
 
 @auth_bp.route('/logout')
 def logout():

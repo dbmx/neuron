@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2>Add News</h2>
+
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for message
+  in messages %}
+  <div class="alert alert-warning" role="alert">{{ message }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+
+  <form
+    method="post"
+    action="{{ url_for('news.add_news') }}"
+    enctype="multipart/form-data"
+  >
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.image.label(class="form-label") }} {{
+      form.image(class="form-control") }} {% if form.image.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.image.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.title.label(class="form-label") }} {{
+      form.title(class="form-control", placeholder="Enter title") }} {% if
+      form.title.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.title.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.content.label(class="form-label") }}
+      <textarea
+        name="content"
+        class="form-control tinymce_"
+        placeholder="Enter content"
+      >
+{{ form.content.data }}</textarea
+      >
+      {% if form.content.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.content.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}

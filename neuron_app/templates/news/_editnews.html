@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2>Edit News</h2>
+  <form
+    method="post"
+    action="{{ url_for('news.edit_news', news_slug=news.slug) }}"
+    enctype="multipart/form-data"
+  >
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.title.label(class="form-label") }} {{
+      form.title(class="form-control", placeholder="Enter title") }} {% if
+      form.title.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.title.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.content.label(class="form-label") }} {% if form.content.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.content.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+      <!-- Dodajte TinyMCE editor za unos sadržaja -->
+      <textarea
+        class="form-control tinymce_"
+        id="content"
+        name="content"
+        placeholder="Enter content"
+        rows="10"
+        <!--
+        Prilagodite
+        broj
+        redova
+        prema
+        potrebi
+        --
+      >
+      >{{ form.content.data | safe }}</textarea
+      >
+    </div>
+
+    <div class="mb-3">
+      {{ form.image.label(class="form-label") }} {{
+      form.image(class="form-control") }} {% if form.image.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.image.errors %} {{ error }} {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+</div>
+{% endblock %}

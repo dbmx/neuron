@@ -28,7 +28,7 @@ def show_news():
                 grouped_news[year_month] = []
             grouped_news[year_month].append(item)
 
-    return render_template('news.html', grouped_news=grouped_news, news_items=news_items, pages=pages)
+    return render_template('/news/news.html', grouped_news=grouped_news, news_items=news_items, pages=pages)
 
 
 
@@ -49,7 +49,7 @@ def add_news():
         db.session.commit()
         flash('News added successfully!')
         return redirect(url_for('main.home'))
-    return render_template('_addnews.html', form=form, pages=pages)
+    return render_template('/news/_addnews.html', form=form, pages=pages)
 
 
 @news_bp.route('/n/<string:news_slug>')
@@ -61,7 +61,7 @@ def news_detail(news_slug):
     news_item.click_count = news_item.click_count + 1 if news_item.click_count else 1
     db.session.commit()
     
-    return render_template('single_news.html', news_item=news_item, pages=pages)
+    return render_template('/news/single_news.html', news_item=news_item, pages=pages)
 
 
 
@@ -88,7 +88,7 @@ def edit_news(news_slug):
         # Preusmeravanje ili renderovanje stranice
         return redirect(url_for('news.news_detail', news_slug=news_slug))
 
-    return render_template('_editnews.html', form=form, news=news, pages=pages)
+    return render_template('/news/_editnews.html', form=form, news=news, pages=pages)
 
 
 

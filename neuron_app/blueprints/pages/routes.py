@@ -11,7 +11,7 @@ def show_page(page_name):
     page = Page.query.filter_by(title=page_name).first()
     pages = Page.query.all()  # Query to get all pages
 
-    return render_template('page.html', page=page, pages=pages)
+    return render_template('/pages/page.html', page=page, pages=pages)
 
 @pages_bp.route('/add_page', methods=['GET', 'POST'])
 def add_page():
@@ -24,7 +24,7 @@ def add_page():
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('pages.show_page', page_name=page.title))
-    return render_template('_addpage.html', form=form, pages=pages)
+    return render_template('/pages/_addpage.html', form=form, pages=pages)
 
 
 
@@ -47,7 +47,7 @@ def edit_page(page_title):
         flash('Page updated successfully!', 'success')
         return redirect(url_for('pages.show_page', page_name=page.title))
 
-    return render_template('_editpage.html', form=form, page=page, pages=pages)
+    return render_template('/pages/_editpage.html', form=form, page=page, pages=pages)
 
 
 

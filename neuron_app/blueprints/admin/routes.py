@@ -20,7 +20,7 @@ def dashboard():
     users = User.query.all()
     news_items = News.query.all()
     pages = Page.query.all()
-    return render_template('admin_dashboard.html', users=users, news_items=news_items, pages=pages)
+    return render_template('/admin/dashboard.html', users=users, news_items=news_items, pages=pages)
 
 
 @admin_bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
